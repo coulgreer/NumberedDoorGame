@@ -1,5 +1,7 @@
 # Numbered Door Game
 Numbered Door Game is a reimplementation of the door puzzles from Zero Escape: 999. This version allows the player to choose what numbers are used on the door while leaving the others behind. The player must progress through all 4 stages to win.
+
+STILL A WORK IN PROGRESS
  
 ## Installation
 ```
