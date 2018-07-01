@@ -22,7 +22,9 @@ pip install --save numbered-door-game
  - The goal of the game is to add the available numbers together in order to get the digital root of the door.
 
 ```
-   A digital root is the single digit value obtained by recursively summing digits, on each iteration using the result from the previous iteration to compute a digit sum. The process continues until a single-digit number is reached.
+   A digital root is the single digit value obtained by recursively summing digits, on each iteration
+   using the result from the previous iteration to compute a digit sum. The process continues until a
+   single-digit number is reached.
    
    Example
       Door value        = 9
