@@ -3,25 +3,31 @@ import constants as c
 
 
 class NumberBall(pygame.sprite.Sprite):
-    def __init__(self, pos_index, image):
+    def __init__(self, value, image):
         pygame.sprite.Sprite.__init__(self)
 
+        self.pos_index = -1
+        self.value = value
         self.image = pygame.image.load(image)
         self.rect = self.image.get_rect()
 
-        diameter = self.rect.width
-        radius = diameter / 2
-        total_circle_width = c.MAX_BALLS * diameter
-        margin = (c.SCREEN_WIDTH - total_circle_width) // (c.MAX_BALLS * 2) if (c.SCREEN_WIDTH - total_circle_width) > 0 else 0
-        y = self.calculate_y(radius, margin)
-        x = self.calculate_x(radius, margin, pos_index)
+    def set_default_position_index(self, pos_index):
+        self.pos_index = pos_index
+        x = (self.pos_index / c.MAX_BALLS) * c.SCREEN_WIDTH + (c.SCREEN_WIDTH / c.MAX_BALLS) / 2
+        y = c.SCREEN_BORDER_THICKNESS
+        self.rect.midtop = (x, y)
 
-        self.rect.center = (x, y)
+    def reset_position(self):
+        x = (self.pos_index / c.MAX_BALLS) * c.SCREEN_WIDTH + (c.SCREEN_WIDTH / c.MAX_BALLS) / 2
+        y = c.SCREEN_BORDER_THICKNESS
+        self.rect.midtop = (x, y)
 
-    def calculate_y(self, ball_radius, margin):
-        y = ball_radius + margin
-        return y
+    def move_to_door(self, door_index, rect):
+        if not (door_index + 1) % 2 == 0:
+            x = (rect.width / 3) / 2 + rect.x
+        else:
+            x = (rect.width - self.rect.width / 2) + rect.x - c.DOOR_BORDER_THICKNESS
 
-    def calculate_x(self, ball_radius, margin, pos_index):
-        x = (margin * (1 + pos_index)) + (ball_radius * (1 + (2 * pos_index))) + (margin * pos_index)
-        return x
+        y = (60 * (door_index // 2) + c.DOOR_BORDER_THICKNESS) + rect.y
+        self.rect.midtop = (x, y)
+

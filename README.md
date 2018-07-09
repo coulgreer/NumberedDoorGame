@@ -64,10 +64,6 @@ pip install --save numbered-door-game
  - Only one door has to be solved to proceed to the next stage, but this will hinder the player's progression and may stop them from winning at all.
  - In the HARD difficulty you must use all the available digits on the door.
  
-## API
- 
-## Tests
- 
 ## Acknowledge
  - Spike Chunsoft
  
