@@ -3,10 +3,13 @@ Numbered Door Game is a reimplementation of the door puzzles from Zero Escape: 9
 
 STILL A WORK IN PROGRESS
  
-## Installation
-```
-pip install --save numbered-door-game
-```
+## Usage
+ 1) Download the project.
+ ```
+ pip install numbereddoor-game
+ ```
+ 1) Navigate to 'build/exe.win-amd64-3.6' folder.
+ 3) Find the 'main_game.exe' file and double click it to launch the game.
  
 ## Controls
 
@@ -16,7 +19,7 @@ pip install --save numbered-door-game
  
 #### Mouse
  - Use the mouse to highlight elements, numbers and doors. This is an alternative to using the arrow keys.
- - Use MOUSE 1 to select a highlighted element. This is an alternative to pressing the ENTER key.
+ - Use MOUSE 1 to select an element. This is an alternative to pressing the ENTER key.
   
 ## How to Play
  - The goal of the game is to add the available numbers together in order to get the digital root of the door.
@@ -59,7 +62,9 @@ pip install --save numbered-door-game
 	  Its also interesting to note that 9 never changes the digital root of a problem.
 ```
  
- - The player can only use each provided number once,and the player has to use 0 or 3-5 numbers for a door's solution. The solution will be counted as invalid otherwise.
+ 
+ - You must select a door for a ball to go to before it moves.
+ - The player can only use each provided number once, and the player has to use 0 or 3-5 numbers for a door's solution. The solution will be counted as invalid otherwise.
  - After a stage is completed, all numbers used to get through the door(s) from the previous stage will then be available for the next stage rendering the unused numbers unavailable for the rest of the game.
  - Only one door has to be solved to proceed to the next stage, but this will hinder the player's progression and may stop them from winning at all.
  - In the HARD difficulty you must use all the available digits on the door.

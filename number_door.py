@@ -15,6 +15,12 @@ class NumberDoor(pygame.sprite.Sprite):
         self.image = pygame.image.load(image_url)
         self.rect = self.image.get_rect()
 
+    def set_slots(self, slots):
+        self.slots = slots
+
+    def get_slots(self):
+        return self.slots
+
     def add_ball(self, ball_value):
         if c.DEFAULT_SLOT_VALUE not in self.slots:
             return False
@@ -31,6 +37,10 @@ class NumberDoor(pygame.sprite.Sprite):
             return True
         except ValueError:
             return False
+
+    def reset(self):
+        self.slots = [c.DEFAULT_SLOT_VALUE, c.DEFAULT_SLOT_VALUE, c.DEFAULT_SLOT_VALUE,
+                      c.DEFAULT_SLOT_VALUE, c.DEFAULT_SLOT_VALUE]
 
     def has_valid_solution(self):
         digital_root = 0
