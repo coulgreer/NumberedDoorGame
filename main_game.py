@@ -11,14 +11,59 @@ button_sprites = pygame.sprite.Group()
 
 
 def main():
+    global screen
+    global clock
     pygame.init()
 
     pygame.display.set_caption('Numbered Door Game')
     screen = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
     clock = pygame.time.Clock()
 
+    intro_loop()
+    pygame.quit()
+
+
+def intro_loop():
+    done = False
+    text_font = pygame.font.SysFont('Arial', c.EXTRA_LARGE_TEXT)
+    button_font = pygame.font.SysFont('Arial', c.LARGE_TEXT)
+    start_button = Button((c.SCREEN_WIDTH / 2 - c.LARGE_BUTTON_WIDTH / 2, c.SCREEN_HEIGHT / 2 + c.EXTRA_LARGE_TEXT,
+                           c.LARGE_BUTTON_WIDTH, c.LARGE_BUTTON_HEIGHT),
+                          'Start', button_font, c.GRAY, c.HOT_PINK)
+    start_button.assign_function(game_loop)
+    button_sprites.add(start_button)
+
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            for button in button_sprites:
+                button.handle_event(event)
+
+        screen.fill(c.WHITE)
+        draw_text(screen, 'Welcome to the Game', text_font, [c.SCREEN_WIDTH / 2, c.SCREEN_HEIGHT / 2])
+
+        button_sprites.update()
+        button_sprites.draw(screen)
+
+        pygame.display.update()
+
+
+def draw_text(surf, text, font, coordinates):
+    x = coordinates[0]
+    y = coordinates[1]
+    text_surf = font.render(text, True, c.BLACK)
+    text_rect = text_surf.get_rect()
+    text_rect.center = (x, y)
+    surf.blit(text_surf, text_rect)
+
+
+def game_loop():
     done = False
 
+    button_sprites.empty()
     initialize_balls()
 
     door_images = ('images/Doors/Door-1.png', 'images/Doors/Door-2.png', 'images/Doors/Door-3.png',
@@ -34,21 +79,25 @@ def main():
 
     stages[current_stage][0].set_active(True)
 
+    create_buttons(stages)
+
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                done = True
+                pygame.quit()
+                quit()
 
             if event.type == pygame.MOUSEBUTTONUP:
                 move_ball(stages[current_stage])
+
+            for button in button_sprites:
+                button.handle_event(event)
 
         door_sprites.empty()
         for x in range(0, len(stages[current_stage])):
             door = stages[current_stage][x]
             door.set_position(x, len(stages[current_stage]))
             door_sprites.add(door)
-
-        create_buttons(event, stages)
 
         ball_sprites.update()
         door_sprites.update()
@@ -61,7 +110,6 @@ def main():
 
         pygame.display.update()
         clock.tick(60)
-    pygame.quit()
 
 
 def initialize_balls():
@@ -107,14 +155,6 @@ def remove_unused_balls(stage):
     return temp_balls
 
 
-def reset():
-    for ball in ball_sprites:
-        ball.reset_position()
-
-    for door in door_sprites:
-        door.reset()
-
-
 def progress_to_next_stage(stages):
     global current_stage
     global ball_sprites
@@ -130,10 +170,44 @@ def progress_to_next_stage(stages):
         current_stage += 1
         stages[current_stage][0].set_active(True)
     elif True in solutions and current_stage == 4:
-        reset()
+        game_over_loop()
 
-        # Give the user some fanfare and tell them they won
-        current_stage = 1
+
+def game_over_loop():
+    button_sprites.empty()
+
+    done = False
+    text_font = pygame.font.SysFont('Arial', c.EXTRA_LARGE_TEXT)
+    button_font = pygame.font.SysFont('Arial', c.MEDIUM_TEXT)
+    retry_button = Button((c.SCREEN_WIDTH / 2, c.SCREEN_HEIGHT / 2 + c.LARGE_BUTTON_HEIGHT,
+                           c.LARGE_BUTTON_WIDTH, c.LARGE_BUTTON_HEIGHT),
+                          'Restart', button_font, c.GRAY, c.LIGHT_STEEL_BLUE)
+    retry_button.assign_function(restart_game)
+    button_sprites.add(retry_button)
+
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            for button in button_sprites:
+                button.handle_event(event)
+
+        screen.fill(c.WHITE)
+        draw_text(screen, 'Congrats You Won!!', text_font, (c.SCREEN_WIDTH / 2, c.SCREEN_HEIGHT / 2))
+        button_sprites.update()
+        button_sprites.draw(screen)
+
+        pygame.display.update()
+
+
+def reset():
+    for ball in ball_sprites:
+        ball.reset_position()
+
+    for door in door_sprites:
+        door.reset()
 
 
 def restart_game():
@@ -143,29 +217,32 @@ def restart_game():
     ball_sprites.empty()
     current_stage = 1
 
-    initialize_balls()
-    reset()
+    game_loop()
 
 
-def create_buttons(event, stages):
+def create_buttons(stages):
+    font = pygame.font.SysFont('Arial', c.SMALL_TEXT)
+
     margin = 10
-    button_length = 80
-    button_area = margin + button_length + margin
+    button_area = margin + c.MEDIUM_BUTTON_WIDTH + margin
     y = 300
 
     x = margin + c.SCREEN_WIDTH / 2 - (button_area * 3) / 2
-    check_button = Button((x, y, 80, 40), 'Check', c.GRAY, c.TAN)
-    check_button.assign_function(event, progress_to_next_stage, stages)
+    check_button = Button((x, y, c.MEDIUM_BUTTON_WIDTH, c.MEDIUM_BUTTON_HEIGHT),
+                          'Check', font, c.GRAY, c.TAN)
+    check_button.assign_function(progress_to_next_stage, stages)
     button_sprites.add(check_button)
 
     x += button_area
-    clear_button = Button((x, y, 80, 40), 'Clear', c.GRAY, c.LIGHT_SKY_BLUE)
-    clear_button.assign_function(event, reset)
+    clear_button = Button((x, y, c.MEDIUM_BUTTON_WIDTH, c.MEDIUM_BUTTON_HEIGHT),
+                          'Clear', font, c.GRAY, c.LIGHT_SKY_BLUE)
+    clear_button.assign_function(reset)
     button_sprites.add(clear_button)
 
     x += button_area
-    restart_button = Button((x, y, 80, 40), 'Restart', c.GRAY, c.ORCHID)
-    restart_button.assign_function(event, restart_game)
+    restart_button = Button((x, y, c.MEDIUM_BUTTON_WIDTH, c.MEDIUM_BUTTON_HEIGHT),
+                            'Restart', font, c.GRAY, c.ORCHID)
+    restart_button.assign_function(restart_game)
     button_sprites.add(restart_button)
 
 
