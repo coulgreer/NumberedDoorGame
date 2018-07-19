@@ -39,11 +39,11 @@ STILL A WORK IN PROGRESS
 			- OR -
 
 	  calculate) 
-	             3 + 9 = 12
+	         3 + 9 = 12
 		       We are given 3 digits: 1, 6, 9, so lets start with a different approach than 
 		       above. Adding two digits, 3 and 9, resulting in 12.
 		       
-	             12 = 1 + 2 = 3
+	         12 = 1 + 2 = 3
 		       12 is not a digit so we need to reduce this number to its digital root. We have
 		       1 and 2 which when added together result in 3.
 		     
