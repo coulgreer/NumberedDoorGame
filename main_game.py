@@ -1,4 +1,5 @@
 import pygame
+import sys
 import constants as c
 from number_ball import NumberBall
 from number_door import NumberDoor
@@ -20,7 +21,6 @@ def main():
     clock = pygame.time.Clock()
 
     intro_loop()
-    pygame.quit()
 
 
 def intro_loop():
@@ -36,8 +36,7 @@ def intro_loop():
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                exit_game()
 
             for button in button_sprites:
                 button.handle_event(event)
@@ -49,6 +48,11 @@ def intro_loop():
         button_sprites.draw(screen)
 
         pygame.display.update()
+
+
+def exit_game():
+    pygame.quit()
+    sys.exit()
 
 
 def draw_text(surf, text, font, coordinates):
@@ -84,8 +88,7 @@ def game_loop():
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                exit_game()
 
             if event.type == pygame.MOUSEBUTTONUP:
                 move_ball(stages[current_stage])
@@ -129,9 +132,10 @@ def move_ball(stage):
     if c.BALL_DIV_HEIGHT < mouse_y:
         for door in stage:
             if door.rect.collidepoint(mouse_position):
+                for unselected_door in stage:
+                    unselected_door.set_active(False)
                 door.set_active(True)
-            else:
-                door.set_active(False)
+                break
 
     for ball in ball_sprites:
         if ball.rect.collidepoint(mouse_position) and c.BALL_DIV_HEIGHT < mouse_y:
@@ -188,8 +192,7 @@ def game_over_loop():
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                exit_game()
 
             for button in button_sprites:
                 button.handle_event(event)
